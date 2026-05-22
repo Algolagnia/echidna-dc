@@ -64,7 +64,7 @@ npm start
 ```
 
 Full step-by-step guide (Discord token extraction, Telegram BotFather,
-systemd hardening, VM/cloud comparison): open **[docs/index.html](docs/index.html)**
+systemd hardening, VM/cloud comparison): open **[docs/index.html](docs/index.html) · [live site](https://algolagnia.github.io/echidna-dc/)**
 in a browser. Bilingual TR/EN.
 
 ## Telegram commands
@@ -118,7 +118,7 @@ Full threat model in [SECURITY.md](SECURITY.md).
 
 ## Documentation
 
-- [docs/index.html](docs/index.html) — full bilingual user guide
+- [docs/index.html](docs/index.html) · [live site](https://algolagnia.github.io/echidna-dc/) — full bilingual user guide
   (open in a browser)
 - [SECURITY.md](SECURITY.md) — threat model, vulnerability reporting
 - [DISCLAIMER.md](DISCLAIMER.md) — legal & ethical obligations
