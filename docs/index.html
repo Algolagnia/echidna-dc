@@ -171,38 +171,16 @@ kbd{background:#fff;border:1px solid #d1d5db;border-bottom-width:2px;border-radi
 
       <ol class="steps">
         <li>
-          <strong data-lang="tr">Geliştirme makinende paketle</strong>
-          <strong data-lang="en">Package on your dev machine</strong>
-<pre><code><span class="c"># proje dizininden / from the project directory</span>
-tar czf echidna.tar.gz \
-  --exclude='node_modules' --exclude='dist' --exclude='.git' \
-  src tests deploy docs \
-  package.json package-lock.json tsconfig.json \
-  .env.example .gitignore README.md</code></pre>
+          <strong data-lang="tr">Node.js 22 LTS kur (tek seferlik)</strong>
+          <strong data-lang="en">Install Node.js 22 LTS (one-time)</strong>
+<pre><code>curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs git</code></pre>
         </li>
         <li>
-          <strong data-lang="tr">VM'e aktar</strong>
-          <strong data-lang="en">Transfer to the VM</strong>
-<pre><code><span class="c"># VM IP'sini öğren: VM içinde "ip -4 addr | grep inet"</span>
-<span class="c"># find the VM IP first: run "ip -4 addr | grep inet" inside the VM</span>
-scp echidna.tar.gz user@192.168.x.x:~/</code></pre>
-          <p data-lang="tr" style="margin:6px 0 0;font-size:13px;color:#6b7280">VM'de SSH yoksa: <code>sudo apt install -y openssh-server &amp;&amp; sudo systemctl enable --now ssh</code></p>
-          <p data-lang="en" style="margin:6px 0 0;font-size:13px;color:#6b7280">If SSH isn't running in the VM: <code>sudo apt install -y openssh-server &amp;&amp; sudo systemctl enable --now ssh</code></p>
-        </li>
-        <li>
-          <strong data-lang="tr">VM'de Node.js + paketle</strong>
-          <strong data-lang="en">Install Node.js on the VM and unpack</strong>
-<pre><code><span class="c"># Node.js 22 LTS (tek seferlik)</span>
-<span class="c"># Node.js 22 LTS (one-time)</span>
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt install -y nodejs
-
-<span class="c"># aç ve kur</span>
-<span class="c"># unpack and install</span>
-mkdir -p ~/echidna
-tar xzf ~/echidna.tar.gz -C ~/echidna
-cd ~/echidna
-find . -name '._*' -delete   <span class="c"># macOS metadata temizliği</span>
+          <strong data-lang="tr">Repo'yu klonla ve bağımlılıkları kur</strong>
+          <strong data-lang="en">Clone the repo and install dependencies</strong>
+<pre><code>git clone https://github.com/Algolagnia/echidna-dc.git echidna
+cd echidna
 npm ci --include=dev
 npm run build</code></pre>
         </li>
@@ -215,6 +193,11 @@ nano .env
 chmod 600 .env</code></pre>
           <p data-lang="tr" style="margin:6px 0 0;font-size:13px;color:#6b7280">Token nasıl alınır — aşağıda <a href="#config">Yapılandırma</a> bölümünde.</p>
           <p data-lang="en" style="margin:6px 0 0;font-size:13px;color:#6b7280">How to obtain the tokens — see <a href="#config">Configuration</a> below.</p>
+        </li>
+        <li>
+          <strong data-lang="tr">Testleri çalıştır (opsiyonel ama önerilen)</strong>
+          <strong data-lang="en">Run the tests (optional but recommended)</strong>
+<pre><code>npm test   <span class="c"># 70 test, hepsi yeşil / all green</span></code></pre>
         </li>
         <li>
           <strong data-lang="tr">Başlat</strong>
@@ -230,6 +213,13 @@ chmod 600 .env</code></pre>
         <strong data-lang="en">For production (optional)</strong>
         <p data-lang="tr">Yukarıdaki adımlar geliştirme için yeterli. 7/24 çalışma için <code>deploy/echidna.service</code> systemd birimini kullan — bakım bölümüne bak.</p>
         <p data-lang="en">The steps above suffice for development. For 24/7 operation, use the systemd unit at <code>deploy/echidna.service</code> — see the Maintenance section.</p>
+      </div>
+
+      <div class="callout info">
+        <strong data-lang="tr">İnternet erişimi olmayan VM için</strong>
+        <strong data-lang="en">Air-gapped VM (no direct internet)</strong>
+        <p data-lang="tr">Host makinende <code>git clone</code> ile çek, klasörü <code>tar czf echidna.tar.gz --exclude=node_modules --exclude=dist --exclude=.git echidna/</code> şeklinde paketle, <code>scp</code> ile VM'e at, VM içinde <code>tar xzf</code> ile aç ve adım 1'den (Node kurulumu) devam et.</p>
+        <p data-lang="en">On a connected host, <code>git clone</code> the repo, package with <code>tar czf echidna.tar.gz --exclude=node_modules --exclude=dist --exclude=.git echidna/</code>, transfer with <code>scp</code>, extract with <code>tar xzf</code> inside the VM, and continue from step 1 (Node install).</p>
       </div>
     </section>
 
