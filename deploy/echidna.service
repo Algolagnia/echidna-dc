@@ -1,0 +1,60 @@
+[Unit]
+Description=Echidna Discord OSINT lookup service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=echidna
+Group=echidna
+WorkingDirectory=/opt/echidna
+ExecStart=/usr/bin/node --max-old-space-size=512 dist/index.js
+Restart=on-failure
+RestartSec=10s
+EnvironmentFile=/opt/echidna/.env
+
+# Filesystem isolation
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+PrivateTmp=true
+PrivateDevices=true
+PrivateUsers=true
+ReadOnlyPaths=/opt/echidna
+ReadWritePaths=
+
+# Capabilities & namespaces
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+# Syscall filter
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources @debug @mount
+
+# Resource limits
+MemoryMax=768M
+TasksMax=64
+LimitNOFILE=1024
+LimitCORE=0
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=echidna
+
+[Install]
+WantedBy=multi-user.target

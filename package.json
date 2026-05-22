@@ -1,0 +1,43 @@
+{
+  "name": "echidna",
+  "version": "0.1.0",
+  "description": "Discord OSINT lookup tool with Telegram interface — passive observer, zero persistence, modular analysis (scam flags, NLP, confidence score).",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "echidna contributors",
+  "keywords": [
+    "discord",
+    "osint",
+    "telegram",
+    "moderation",
+    "self-bot",
+    "typescript",
+    "nodejs",
+    "anti-raid"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --max-old-space-size=512 dist/index.js",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "discord.js-selfbot-v13": "^3.5.0",
+    "dotenv": "^16.4.5",
+    "grammy": "^1.30.0",
+    "pino": "^9.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "pino-pretty": "^11.3.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.4"
+  }
+}

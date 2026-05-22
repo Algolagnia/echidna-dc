@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>echidna · kullanım kılavuzu</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fafaf9;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",sans-serif;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+/* Bilingual visibility */
+html[lang="tr"] [data-lang="en"]{display:none!important}
+html[lang="en"] [data-lang="tr"]{display:none!important}
+
+.topbar{border-bottom:1px solid #e5e7eb;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.topbar-inner{max-width:1140px;margin:0 auto;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.topbar .brand{font-weight:600;font-size:17px;letter-spacing:-0.2px;color:#1f2937}
+.topbar .doc-sub{color:#6b7280;font-size:13px;margin-left:10px}
+.lang-switch{display:flex;gap:4px}
+.lang-switch a{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;color:#6b7280;border:1px solid #e5e7eb;text-decoration:none;cursor:pointer;background:#fff;transition:color 0.15s,border-color 0.15s}
+.lang-switch a.active{background:#1f2937;color:#fafaf9;border-color:#1f2937}
+.lang-switch a:not(.active):hover{color:#1f2937;border-color:#9ca3af}
+
+.layout{display:grid;grid-template-columns:220px 1fr;max-width:1140px;margin:0 auto;gap:40px;padding:32px 24px}
+aside.toc{position:sticky;top:72px;align-self:start;max-height:calc(100vh - 96px);overflow-y:auto;font-size:13px}
+aside.toc h3{margin:0 0 10px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;font-weight:600}
+aside.toc a{display:block;color:#6b7280;text-decoration:none;padding:5px 0;border-left:2px solid transparent;padding-left:10px;margin-bottom:0}
+aside.toc a:hover{color:#1f2937;border-left-color:#c2410c}
+
+main{min-width:0}
+
+.hero{padding:8px 0 24px;margin-bottom:24px;border-bottom:1px solid #e5e7eb}
+.hero h1{font-size:32px;margin:0 0 6px;letter-spacing:-0.8px;color:#1f2937;font-weight:600}
+.hero .tag{color:#6b7280;font-size:15px;margin:0 0 14px}
+.hero p{color:#4b5563;max-width:680px;margin:0;font-size:14.5px}
+.hero .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.badge{background:#f3f4f6;border:1px solid #e5e7eb;padding:3px 8px;border-radius:4px;font-size:11.5px;color:#6b7280}
+
+section{margin-bottom:32px}
+section h2{margin:0 0 12px;font-size:22px;font-weight:600;color:#1f2937;letter-spacing:-0.3px}
+section h2 .num{color:#9ca3af;margin-right:8px;font-weight:400;font-variant-numeric:tabular-nums}
+section h3{margin-top:20px;margin-bottom:8px;font-size:15px;color:#1f2937;font-weight:600}
+section h4{margin-top:14px;margin-bottom:6px;font-size:13px;color:#374151;font-weight:600}
+
+p{margin:8px 0 12px;color:#374151}
+a{color:#c2410c;text-decoration:none}
+a:hover{text-decoration:underline}
+strong{color:#1f2937;font-weight:600}
+
+code{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:3px;padding:1px 5px;font-family:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.87em;color:#1f2937}
+pre{background:#1f2937;border:none;border-radius:6px;padding:14px 16px;overflow-x:auto;font-family:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:#e5e7eb;margin:10px 0}
+pre code{background:none;border:none;padding:0;color:#e5e7eb;font-size:inherit}
+pre .c{color:#9ca3af}
+pre .k{color:#fdba74}
+pre .s{color:#86efac}
+
+.callout{border-left:3px solid #d1d5db;border-radius:4px;padding:11px 14px;margin:12px 0;background:#f9fafb;font-size:14px}
+.callout.warning{border-left-color:#d97706;background:#fffbeb;color:#78350f}
+.callout.danger{border-left-color:#dc2626;background:#fef2f2;color:#7f1d1d}
+.callout.info{border-left-color:#2563eb;background:#eff6ff;color:#1e3a8a}
+.callout.success{border-left-color:#059669;background:#ecfdf5;color:#064e3b}
+.callout strong:first-child{display:block;margin-bottom:4px;color:inherit}
+.callout p{color:inherit;margin:4px 0 0}
+
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid #f3f4f6;vertical-align:top;color:#374151}
+th{background:#f9fafb;color:#6b7280;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.4px}
+tr:last-child td{border-bottom:none}
+td code{font-size:12px}
+
+ol,ul{padding-left:22px}
+ol li,ul li{margin:4px 0;color:#374151}
+
+.steps{counter-reset:step;list-style:none;padding:0}
+.steps>li{counter-increment:step;position:relative;padding-left:36px;margin-bottom:14px;color:#374151}
+.steps>li::before{content:counter(step);position:absolute;left:0;top:0;width:24px;height:24px;background:#1f2937;color:#fafaf9;font-weight:600;border-radius:50%;display:grid;place-items:center;font-size:12px;line-height:1}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:12px 14px}
+.card h4{margin:0 0 4px;font-size:13.5px;color:#1f2937;text-transform:none;letter-spacing:0;font-weight:600}
+.card p{margin:0;color:#6b7280;font-size:13px}
+
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:11px;font-weight:500;background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+.tag.high{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+.tag.med{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.tag.low{background:#dbeafe;color:#1e40af;border-color:#bfdbfe}
+
+footer{text-align:center;color:#9ca3af;font-size:12.5px;padding:32px 0 16px;border-top:1px solid #e5e7eb;margin-top:32px}
+
+kbd{background:#fff;border:1px solid #d1d5db;border-bottom-width:2px;border-radius:4px;padding:1px 6px;font-family:"SF Mono",ui-monospace,monospace;font-size:11px;color:#374151}
+
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;padding:16px;gap:16px}
+  aside.toc{position:static;max-height:none;order:2;margin-top:24px;padding-top:24px;border-top:1px solid #e5e7eb}
+  .hero h1{font-size:26px}
+  .topbar-inner{padding:10px 16px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div>
+      <span class="brand">echidna</span>
+      <span class="doc-sub" data-lang="tr">Kullanım Kılavuzu</span>
+      <span class="doc-sub" data-lang="en">User Guide</span>
+    </div>
+    <nav class="lang-switch">
+      <a href="#" data-target="tr">TR</a>
+      <a href="#" data-target="en">EN</a>
+    </nav>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <h3 data-lang="tr">İçindekiler</h3>
+    <h3 data-lang="en">Contents</h3>
+    <a href="#intro" data-lang="tr">Genel bakış</a>
+    <a href="#intro" data-lang="en">Overview</a>
+    <a href="#quickstart" data-lang="tr">Hızlı kurulum</a>
+    <a href="#quickstart" data-lang="en">Quickstart</a>
+    <a href="#how" data-lang="tr">Sistem nasıl çalışır</a>
+    <a href="#how" data-lang="en">How it works</a>
+    <a href="#capabilities" data-lang="tr">Yetenekler</a>
+    <a href="#capabilities" data-lang="en">Capabilities</a>
+    <a href="#risks" data-lang="tr">Riskler ve uyarılar</a>
+    <a href="#risks" data-lang="en">Risks &amp; warnings</a>
+    <a href="#commands" data-lang="tr">Komutlar</a>
+    <a href="#commands" data-lang="en">Commands</a>
+    <a href="#config" data-lang="tr">Yapılandırma</a>
+    <a href="#config" data-lang="en">Configuration</a>
+    <a href="#analysis" data-lang="tr">Analiz katmanları</a>
+    <a href="#analysis" data-lang="en">Analysis layers</a>
+    <a href="#maintenance" data-lang="tr">Bakım</a>
+    <a href="#maintenance" data-lang="en">Maintenance</a>
+    <a href="#faq" data-lang="tr">SSS</a>
+    <a href="#faq" data-lang="en">FAQ</a>
+  </aside>
+
+  <main>
+    <div class="hero" id="intro">
+      <h1>echidna</h1>
+      <div class="tag" data-lang="tr">Discord OSINT sorgu aracı — Telegram'dan komuta, sıfır kalıcılık</div>
+      <div class="tag" data-lang="en">Discord OSINT lookup tool — operated via Telegram, zero persistence</div>
+      <p data-lang="tr">
+        Topluluk yöneticileri için tasarlanmış pasif gözlem aracı. Throwaway bir Discord hesabı
+        sunuculara katılır, Telegram'dan bir ID gönderdiğinizde sistem o kullanıcının
+        halka açık çapraz-sunucu izini iki HTML rapor halinde teslim eder.
+      </p>
+      <p data-lang="en">
+        A passive observation tool for community admins. A throwaway Discord account sits in
+        servers; when you send an ID via Telegram, the system returns the user's publicly visible
+        cross-server footprint as two HTML reports.
+      </p>
+      <div class="badges">
+        <span class="badge">TypeScript</span>
+        <span class="badge" data-lang="tr">sıfır disk yazımı</span>
+        <span class="badge" data-lang="en">zero disk writes</span>
+        <span class="badge">systemd hardened</span>
+        <span class="badge" data-lang="tr">Discord ToS riski</span>
+        <span class="badge" data-lang="en">Discord ToS risk</span>
+      </div>
+    </div>
+
+    <section id="quickstart">
+      <h2><span class="num">1.</span><span data-lang="tr">Hızlı kurulum</span><span data-lang="en">Quickstart</span></h2>
+      <p data-lang="tr">Önceden: Debian/Ubuntu çalışan bir VM veya Raspberry Pi, Discord throwaway hesabı (≥30 günlük, 2FA açık), Telegram bot tokeni.</p>
+      <p data-lang="en">Prerequisites: a Debian/Ubuntu VM or Raspberry Pi, a throwaway Discord account (≥30 days, 2FA on), and a Telegram bot token.</p>
+
+      <ol class="steps">
+        <li>
+          <strong data-lang="tr">Geliştirme makinende paketle</strong>
+          <strong data-lang="en">Package on your dev machine</strong>
+<pre><code><span class="c"># proje dizininden / from the project directory</span>
+tar czf echidna.tar.gz \
+  --exclude='node_modules' --exclude='dist' --exclude='.git' \
+  src tests deploy docs \
+  package.json package-lock.json tsconfig.json \
+  .env.example .gitignore README.md</code></pre>
+        </li>
+        <li>
+          <strong data-lang="tr">VM'e aktar</strong>
+          <strong data-lang="en">Transfer to the VM</strong>
+<pre><code><span class="c"># VM IP'sini öğren: VM içinde "ip -4 addr | grep inet"</span>
+<span class="c"># find the VM IP first: run "ip -4 addr | grep inet" inside the VM</span>
+scp echidna.tar.gz user@192.168.x.x:~/</code></pre>
+          <p data-lang="tr" style="margin:6px 0 0;font-size:13px;color:#6b7280">VM'de SSH yoksa: <code>sudo apt install -y openssh-server &amp;&amp; sudo systemctl enable --now ssh</code></p>
+          <p data-lang="en" style="margin:6px 0 0;font-size:13px;color:#6b7280">If SSH isn't running in the VM: <code>sudo apt install -y openssh-server &amp;&amp; sudo systemctl enable --now ssh</code></p>
+        </li>
+        <li>
+          <strong data-lang="tr">VM'de Node.js + paketle</strong>
+          <strong data-lang="en">Install Node.js on the VM and unpack</strong>
+<pre><code><span class="c"># Node.js 22 LTS (tek seferlik)</span>
+<span class="c"># Node.js 22 LTS (one-time)</span>
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+<span class="c"># aç ve kur</span>
+<span class="c"># unpack and install</span>
+mkdir -p ~/echidna
+tar xzf ~/echidna.tar.gz -C ~/echidna
+cd ~/echidna
+find . -name '._*' -delete   <span class="c"># macOS metadata temizliği</span>
+npm ci --include=dev
+npm run build</code></pre>
+        </li>
+        <li>
+          <strong data-lang="tr">.env dosyasını doldur</strong>
+          <strong data-lang="en">Fill in <code>.env</code></strong>
+<pre><code>cp .env.example .env
+nano .env
+<span class="c"># DISCORD_TOKEN, TELEGRAM_BOT_TOKEN, ADMIN_CHAT_IDS</span>
+chmod 600 .env</code></pre>
+          <p data-lang="tr" style="margin:6px 0 0;font-size:13px;color:#6b7280">Token nasıl alınır — aşağıda <a href="#config">Yapılandırma</a> bölümünde.</p>
+          <p data-lang="en" style="margin:6px 0 0;font-size:13px;color:#6b7280">How to obtain the tokens — see <a href="#config">Configuration</a> below.</p>
+        </li>
+        <li>
+          <strong data-lang="tr">Başlat</strong>
+          <strong data-lang="en">Run</strong>
+<pre><code>npm start</code></pre>
+          <p data-lang="tr" style="margin:6px 0 0;font-size:13px;color:#6b7280">İlk başlangıçta <code>discord_ready</code> log'unu bekle. Sonra Telegram'da botuna <code>/help</code> gönder.</p>
+          <p data-lang="en" style="margin:6px 0 0;font-size:13px;color:#6b7280">Wait for the <code>discord_ready</code> log on first boot, then send <code>/help</code> to your bot on Telegram.</p>
+        </li>
+      </ol>
+
+      <div class="callout success">
+        <strong data-lang="tr">Production için (opsiyonel)</strong>
+        <strong data-lang="en">For production (optional)</strong>
+        <p data-lang="tr">Yukarıdaki adımlar geliştirme için yeterli. 7/24 çalışma için <code>deploy/echidna.service</code> systemd birimini kullan — bakım bölümüne bak.</p>
+        <p data-lang="en">The steps above suffice for development. For 24/7 operation, use the systemd unit at <code>deploy/echidna.service</code> — see the Maintenance section.</p>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2><span class="num">2.</span><span data-lang="tr">Sistem nasıl çalışır</span><span data-lang="en">How it works</span></h2>
+      <p data-lang="tr">
+        Throwaway Discord hesabı (echidna) çok sayıda topluluk sunucusuna katılır ve <strong>pasif gözlemci</strong>
+        olarak durur — mesaj yazmaz, ses kanalına girmez, hiç eylem yapmaz. Gateway üzerinden aldığı
+        mesaj ve presence olayları sürecin RAM'inde tutulur. Admin Telegram'dan <code>/lookup &lt;id&gt;</code>
+        gönderdiğinde sistem:
+      </p>
+      <p data-lang="en">
+        A throwaway Discord account (echidna) joins many community servers as a <strong>passive
+        observer</strong> — it does not send messages, join voice, or take any action. Messages and
+        presence events delivered via the gateway live in process RAM. When the admin sends
+        <code>/lookup &lt;id&gt;</code> from Telegram, the system:
+      </p>
+      <ol>
+        <li data-lang="tr">Mutual sunucularda hedef kullanıcıyı tarar (rol, takma ad, voice state)</li>
+        <li data-lang="en">scans mutual servers for the target (roles, nickname, voice state),</li>
+        <li data-lang="tr">Discord'un kendi search API'sinden son mesajlarını çeker (sunucu başına 100, configurable)</li>
+        <li data-lang="en">pulls recent messages via Discord's search API (100/server by default, configurable),</li>
+        <li data-lang="tr">Profile endpoint'ten bio, badges, GitHub/Steam/Twitch gibi bağlantıları alır</li>
+        <li data-lang="en">fetches bio, badges, and connections (GitHub/Steam/Twitch) from the profile endpoint,</li>
+        <li data-lang="tr">Üç analiz katmanını çalıştırır: risk taraması, davranışsal NLP, güven puanı</li>
+        <li data-lang="en">runs three analysis layers: risk scan, behavioral NLP, confidence score,</li>
+        <li data-lang="tr">İki HTML raporu (kimlik + aktivite) Telegram'a iletir</li>
+        <li data-lang="en">sends two HTML reports (identity + activity) to Telegram,</li>
+        <li data-lang="tr">Bellekteki veri scope dışına çıkar ve garbage collector tarafından silinir</li>
+        <li data-lang="en">and lets the in-memory data fall out of scope for garbage collection.</li>
+      </ol>
+      <p data-lang="tr"><strong>Disk'e hiçbir şey yazılmaz.</strong> Production'da iki katmanlı koruma vardır: Node.js düzeyinde <code>fs.writeFile</code> türü API'ler runtime'da monkey-patch ile bloke edilir; systemd <code>ReadOnlyPaths=/opt/echidna</code> ile kernel düzeyinde aynı kural uygulanır.</p>
+      <p data-lang="en"><strong>Nothing is written to disk.</strong> Production has two layers of protection: at the Node.js level, <code>fs.writeFile</code>-family APIs are monkey-patched at startup; systemd enforces the same with <code>ReadOnlyPaths=/opt/echidna</code> at kernel level.</p>
+    </section>
+
+    <section id="capabilities">
+      <h2><span class="num">3.</span><span data-lang="tr">Yetenekler</span><span data-lang="en">Capabilities</span></h2>
+      <div class="cards">
+        <div class="card">
+          <h4 data-lang="tr">Kimlik & alias clustering</h4>
+          <h4 data-lang="en">Identity &amp; alias clustering</h4>
+          <p data-lang="tr">Username, global_name ve tüm sunucu takma adları case-insensitive dedupe</p>
+          <p data-lang="en">Username, global_name and every server nickname, deduplicated</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Sunucu sınıflandırma</h4>
+          <h4 data-lang="en">Server classification</h4>
+          <p data-lang="tr">Anime, sohbet, eğitim, dev, oyun, 18+, topluluk</p>
+          <p data-lang="en">Anime, chat, education, dev, gaming, 18+, community</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Risk taraması</h4>
+          <h4 data-lang="en">Risk scan</h4>
+          <p data-lang="tr">Phishing, scam, mass-mention, link shortener pattern'leri</p>
+          <p data-lang="en">Phishing, scam, mass-mention, URL shortener patterns</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Davranışsal NLP</h4>
+          <h4 data-lang="en">Behavioral NLP</h4>
+          <p data-lang="tr">Dil, yaş, cinsiyet ipuçları + ton/küfür/CAPS oranı</p>
+          <p data-lang="en">Language, age, gender hints + tone/profanity/CAPS rates</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Güven puanı</h4>
+          <h4 data-lang="en">Confidence score</h4>
+          <p data-lang="tr">0–100 puan, 6 faktör breakdown</p>
+          <p data-lang="en">0–100 score with 6-factor breakdown</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Mesaj geçmişi</h4>
+          <h4 data-lang="en">Message history</h4>
+          <p data-lang="tr">Discord search API ile sunucu başına 100-500 mesaj</p>
+          <p data-lang="en">100-500 messages per server via Discord search API</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Anlık ses durumu</h4>
+          <h4 data-lang="en">Live voice state</h4>
+          <p data-lang="tr">Şu anda hangi sunucu, kanal, süre, flag</p>
+          <p data-lang="en">Current guild, channel, duration, flags</p>
+        </div>
+        <div class="card">
+          <h4 data-lang="tr">Profile bağlantıları</h4>
+          <h4 data-lang="en">Profile connections</h4>
+          <p data-lang="tr">GitHub, Steam, Twitch, Spotify, YouTube, vb.</p>
+          <p data-lang="en">GitHub, Steam, Twitch, Spotify, YouTube, etc.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="risks">
+      <h2><span class="num">4.</span><span data-lang="tr">Riskler ve uyarılar</span><span data-lang="en">Risks &amp; warnings</span></h2>
+
+      <div class="callout danger">
+        <strong data-lang="tr">Discord ToS riski</strong>
+        <strong data-lang="en">Discord ToS risk</strong>
+        <p data-lang="tr">Self-bot kullanımı Discord'un Hizmet Şartları'na aykırıdır. Hesap er ya da geç banlanır. Yalnızca throwaway hesap kullanın, ana hesabınızı asla.</p>
+        <p data-lang="en">Self-bot usage violates Discord's Terms of Service. The account will eventually be banned. Use only a throwaway, never your main account.</p>
+      </div>
+
+      <div class="callout warning">
+        <strong data-lang="tr">Ban'i hızlandıran davranışlar</strong>
+        <strong data-lang="en">Behaviors that accelerate a ban</strong>
+        <ul style="margin:6px 0 0;color:inherit">
+          <li data-lang="tr">Datacenter IP'sinden login (AWS, GCP, DigitalOcean, vb.) — residential IP kullan</li>
+          <li data-lang="en">Logging in from datacenter IPs (AWS, GCP, DigitalOcean…) — use a residential IP</li>
+          <li data-lang="tr">100+ sunuca kısa sürede katılım — günde 2-4 sunucudan fazla katılma</li>
+          <li data-lang="en">Joining many servers quickly — limit to 2-4 servers per day</li>
+          <li data-lang="tr">30 günden yeni hesap — daha yaşlı throwaway tercih et</li>
+          <li data-lang="en">Account younger than 30 days — use an older throwaway</li>
+          <li data-lang="tr"><code>SEARCH_PAGES_PER_GUILD</code>'i çok yüksek ayarlama (default 4 yeterli)</li>
+          <li data-lang="en">Raising <code>SEARCH_PAGES_PER_GUILD</code> too high (default 4 is enough)</li>
+        </ul>
+      </div>
+
+      <div class="callout warning">
+        <strong data-lang="tr">Etik ve hukuki sorumluluk</strong>
+        <strong data-lang="en">Ethical &amp; legal responsibility</strong>
+        <ul style="margin:6px 0 0;color:inherit">
+          <li data-lang="tr">Yalnızca <em>kendi yönettiğin</em> topluluğun moderasyonu için kullan</li>
+          <li data-lang="en">Use only for moderating communities <em>you yourself</em> operate</li>
+          <li data-lang="tr">Raporları üçüncü taraflarla paylaşma; taciz/dox amaçlı kullanma — suç teşkil edebilir</li>
+          <li data-lang="en">Don't share reports with third parties; never use for harassment or doxxing — may be a criminal offense</li>
+          <li data-lang="tr">KVKK / GDPR yükümlülükleri sana aittir; analist sıfatınla veri işleyen sensin</li>
+          <li data-lang="en">GDPR/CCPA-like obligations are yours; you are the data processor</li>
+          <li data-lang="tr">Yaş ve cinsiyet tahminleri <em>kesinlik değil</em> — confidence düşükse karar verme</li>
+          <li data-lang="en">Age and gender hints are <em>estimates, not facts</em> — don't decide on low-confidence signals</li>
+        </ul>
+      </div>
+
+      <div class="callout info">
+        <strong data-lang="tr">Hesap kaybedilirse</strong>
+        <strong data-lang="en">If the account is lost</strong>
+        <p data-lang="tr">Yeni throwaway al, sunuculara yavaşça yeniden katıl, <code>.env</code>'de <code>DISCORD_TOKEN</code>'i güncelle, <code>npm start</code> ile yeniden başlat. Veri kaybı olmaz çünkü zaten persistence yoktur.</p>
+        <p data-lang="en">Get a new throwaway, re-join the servers slowly, update <code>DISCORD_TOKEN</code> in <code>.env</code>, restart with <code>npm start</code>. No data loss — nothing was persisted.</p>
+      </div>
+    </section>
+
+    <section id="commands">
+      <h2><span class="num">5.</span><span data-lang="tr">Komutlar</span><span data-lang="en">Commands</span></h2>
+      <table>
+        <thead><tr>
+          <th data-lang="tr">Komut</th><th data-lang="en">Command</th>
+          <th data-lang="tr">Açıklama</th><th data-lang="en">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><code>/lookup &lt;id&gt;</code></td>
+            <td colspan="2">
+              <span data-lang="tr">Tam analiz — kimlik, alias, mesajlar, voice, profil, risk, davranışsal NLP, güven puanı. İki HTML rapor ek olarak gelir.</span>
+              <span data-lang="en">Full analysis — identity, aliases, messages, voice, profile, risk, behavioral NLP, confidence score. Two HTML reports attached.</span>
+            </td>
+          </tr>
+          <tr>
+            <td><code>/status</code></td>
+            <td colspan="2">
+              <span data-lang="tr">Servis sağlığı, RAM cache boyutu, uptime</span>
+              <span data-lang="en">Service health, RAM cache size, uptime</span>
+            </td>
+          </tr>
+          <tr>
+            <td><code>/help</code></td>
+            <td colspan="2">
+              <span data-lang="tr">Komut listesi</span>
+              <span data-lang="en">Command list</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:#6b7280">
+        <span data-lang="tr">Rate limit: 6 lookup/dakika (default). Aşımda Telegram'a "rate limited" yanıtı döner; API çağrısı gönderilmez.</span>
+        <span data-lang="en">Rate limit: 6 lookups/min (default). When exceeded, Telegram receives a "rate limited" reply; no API call is dispatched.</span>
+      </p>
+    </section>
+
+    <section id="config">
+      <h2><span class="num">6.</span><span data-lang="tr">Yapılandırma</span><span data-lang="en">Configuration</span></h2>
+
+      <h3 data-lang="tr">6.1 Discord kullanıcı tokeni</h3>
+      <h3 data-lang="en">6.1 Discord user token</h3>
+      <div class="callout danger">
+        <strong data-lang="tr">Token = hesap erişimi.</strong>
+        <strong data-lang="en">Token = full account access.</strong>
+        <span data-lang="tr">Paylaşma, screenshot alma, repository'ye commitleme. Sızarsa Discord şifresini değiştir (mevcut tokenleri geçersiz kılar).</span>
+        <span data-lang="en">Don't share, screenshot, or commit it. If leaked, change the Discord password to invalidate existing tokens.</span>
+      </div>
+      <ol>
+        <li data-lang="tr">Tarayıcıda (incognito) throwaway hesabıyla <code>https://discord.com/app</code>'i aç</li>
+        <li data-lang="en">In an incognito browser, open <code>https://discord.com/app</code> with the throwaway account</li>
+        <li><kbd>F12</kbd> → <span data-lang="tr">Network sekmesi</span><span data-lang="en">Network tab</span> → <code>/api</code> filter → Fetch/XHR</li>
+        <li data-lang="tr">Bir kanala tıkla; listeden bir <code>messages</code> isteğine tıkla</li>
+        <li data-lang="en">Click a channel; then click a <code>messages</code> request in the list</li>
+        <li data-lang="tr">Sağ panelde <strong>Headers</strong> → <strong>Request Headers</strong> → <code>Authorization:</code> alanı tokendir</li>
+        <li data-lang="en">In the right panel: <strong>Headers</strong> → <strong>Request Headers</strong> → the <code>Authorization:</code> value is the token</li>
+      </ol>
+
+      <h3 data-lang="tr">6.2 Telegram bot tokeni</h3>
+      <h3 data-lang="en">6.2 Telegram bot token</h3>
+      <ol>
+        <li><a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a> → <code>/newbot</code></li>
+        <li data-lang="tr">Görüntü adı ve kullanıcı adı belirle (kullanıcı adı <code>_bot</code> ile bitmeli)</li>
+        <li data-lang="en">Set a display name and username (username must end in <code>_bot</code>)</li>
+        <li data-lang="tr">Verilen tokeni <code>.env</code>'de <code>TELEGRAM_BOT_TOKEN</code> alanına yapıştır</li>
+        <li data-lang="en">Paste the token into <code>.env</code> under <code>TELEGRAM_BOT_TOKEN</code></li>
+        <li><code>/setprivacy</code> → <code>Disable</code></li>
+      </ol>
+
+      <h3 data-lang="tr">6.3 Admin chat ID</h3>
+      <h3 data-lang="en">6.3 Admin chat ID</h3>
+      <ol>
+        <li><a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a> <span data-lang="tr">ile sohbet aç, otomatik yanıt verir</span><span data-lang="en">starts a chat, replies automatically</span></li>
+        <li data-lang="tr"><code>Id:</code> alanındaki sayıyı <code>.env</code>'e <code>ADMIN_CHAT_IDS=…</code> şeklinde ekle (virgülle çoklu)</li>
+        <li data-lang="en">Add the <code>Id:</code> value to <code>.env</code> as <code>ADMIN_CHAT_IDS=…</code> (comma-separated for multiple)</li>
+      </ol>
+
+      <h3 data-lang="tr">6.4 Ayarlanabilen önemli env değerleri</h3>
+      <h3 data-lang="en">6.4 Notable env values</h3>
+      <table>
+        <thead><tr>
+          <th>Variable</th>
+          <th data-lang="tr">Default</th><th data-lang="en">Default</th>
+          <th data-lang="tr">Açıklama</th><th data-lang="en">Description</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><code>RATE_LIMIT_LOOKUP_PER_MIN</code></td><td colspan="2">6</td><td colspan="2"><span data-lang="tr">Telegram /lookup limiti</span><span data-lang="en">Telegram /lookup limit</span></td></tr>
+          <tr><td><code>SEARCH_PAGES_PER_GUILD</code></td><td colspan="2">4</td><td colspan="2"><span data-lang="tr">Sayfa başı 25 mesaj (default 100/server)</span><span data-lang="en">25 messages/page (default 100/server)</span></td></tr>
+          <tr><td><code>SEARCH_MAX_GUILDS</code></td><td colspan="2">50</td><td colspan="2"><span data-lang="tr">Lookup başına search yapılacak sunucu sayısı</span><span data-lang="en">Servers searched per lookup</span></td></tr>
+          <tr><td><code>SEARCH_DELAY_BETWEEN_GUILDS_MS</code></td><td colspan="2">1500</td><td colspan="2"><span data-lang="tr">Sunucu arası gecikme (ban riski azaltır)</span><span data-lang="en">Inter-guild delay (lowers ban risk)</span></td></tr>
+          <tr><td><code>MSG_CACHE_TOTAL</code></td><td colspan="2">50000</td><td colspan="2"><span data-lang="tr">RAM'de tutulacak toplam mesaj sayısı (LRU)</span><span data-lang="en">Total messages held in RAM (LRU)</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="analysis">
+      <h2><span class="num">7.</span><span data-lang="tr">Analiz katmanları</span><span data-lang="en">Analysis layers</span></h2>
+
+      <h3 data-lang="tr">Risk taraması</h3>
+      <h3 data-lang="en">Risk scan</h3>
+      <p data-lang="tr">Mesaj sample'larında lokal regex pattern'leri çalışır. Hiç dış API çağrısı yapmaz. Bulunan flag'ler kimlik raporunun başında pill'lerle gösterilir.</p>
+      <p data-lang="en">Local regex patterns over message samples; no external API. Flags appear as pills at the top of the identity report.</p>
+      <table>
+        <thead><tr><th data-lang="tr">Kategori</th><th data-lang="en">Category</th><th data-lang="tr">Seviye</th><th data-lang="en">Severity</th><th data-lang="tr">Örnek</th><th data-lang="en">Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>nitro-scam</code></td><td colspan="2"><span class="tag high">high</span></td><td colspan="2">"free nitro", "discord.gift/..."</td></tr>
+          <tr><td><code>phishing-url</code></td><td colspan="2"><span class="tag high">high</span></td><td colspan="2">"steamcommunity.ru", "disc0rd.gg"</td></tr>
+          <tr><td><code>token-grabber</code></td><td colspan="2"><span class="tag high">high</span></td><td colspan="2">"token grabber", webhook URL pattern</td></tr>
+          <tr><td><code>crypto-scam</code></td><td colspan="2"><span class="tag med">medium</span></td><td colspan="2">"metamask verify", "free btc airdrop"</td></tr>
+          <tr><td><code>mass-mention</code></td><td colspan="2"><span class="tag med">medium</span></td><td colspan="2"><span data-lang="tr">5+ mention veya @everyone tekrarı</span><span data-lang="en">5+ mentions or repeated @everyone</span></td></tr>
+          <tr><td><code>suspicious-link</code></td><td colspan="2"><span class="tag low">low</span></td><td colspan="2">bit.ly, tinyurl, cutt.ly</td></tr>
+          <tr><td><code>invite-spam</code></td><td colspan="2"><span class="tag low">low</span></td><td colspan="2"><span data-lang="tr">Tek mesajda 2+ Discord davet</span><span data-lang="en">2+ Discord invites in one message</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3 data-lang="tr">Davranışsal NLP</h3>
+      <h3 data-lang="en">Behavioral NLP</h3>
+      <p data-lang="tr">Kullanıcının <em>kendi yazdığı</em> mesajları ve rol etiketlerini analiz eder. 4 çıkarım: dil (TR/EN/AR/RU/DE/ES/FR), yaş (self-mention + nickname numerics), cinsiyet (rol + self-mention), ton (pozitif/nötr/negatif/karışık + küfür/CAPS/emoji oranı). Her çıkarım için <strong>low/medium/high confidence</strong> band'i gösterilir.</p>
+      <p data-lang="en">Analyzes the user's <em>own</em> messages and role labels. Four outputs: language (TR/EN/AR/RU/DE/ES/FR), age (self-mention + nickname numerics), gender (roles + self-mention), tone (positive/neutral/negative/mixed + profanity/CAPS/emoji rates). Each shown with a <strong>low/medium/high confidence</strong> band.</p>
+
+      <h3 data-lang="tr">Güven puanı</h3>
+      <h3 data-lang="en">Confidence score</h3>
+      <p data-lang="tr">0–100 puan. <em>Raporun ne kadar zengin sinyale dayandığını</em> ölçer — kullanıcı suçluluğunu değil. Faktörler: mutual guild sayısı (25), mesaj hacmi (25), profil sinyalleri (15), hesap yaşı (15), recency (10), search coverage (10). Bantlar: 0-34 düşük · 35-59 orta · 60-79 yüksek · 80+ çok yüksek.</p>
+      <p data-lang="en">A 0–100 score. Measures <em>how rich the underlying signals are</em>, not the user's guilt. Factors: mutual guild count (25), message volume (25), profile signals (15), account age (15), recency (10), search coverage (10). Bands: 0-34 low · 35-59 medium · 60-79 high · 80+ very-high.</p>
+    </section>
+
+    <section id="maintenance">
+      <h2><span class="num">8.</span><span data-lang="tr">Bakım</span><span data-lang="en">Maintenance</span></h2>
+
+      <h3 data-lang="tr">systemd ile 7/24 çalıştırma</h3>
+      <h3 data-lang="en">Run 24/7 with systemd</h3>
+<pre><code>sudo adduser --system --no-create-home --group --shell /usr/sbin/nologin echidna
+sudo mkdir -p /opt/echidna
+sudo cp -r dist node_modules package.json deploy /opt/echidna/
+sudo cp .env /opt/echidna/.env
+sudo chown -R echidna:echidna /opt/echidna
+sudo chmod 600 /opt/echidna/.env
+sudo cp deploy/echidna.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now echidna
+sudo journalctl -u echidna -f</code></pre>
+      <p data-lang="tr"><code>echidna.service</code> hardening (ReadOnlyPaths, NoNewPrivileges, MemoryDenyWriteExecute, syscall filter) içerir. <code>sudo systemd-analyze security echidna</code> exposure ≤ 2.0 hedefler.</p>
+      <p data-lang="en">The <code>echidna.service</code> unit includes hardening (ReadOnlyPaths, NoNewPrivileges, MemoryDenyWriteExecute, syscall filter). Target: <code>sudo systemd-analyze security echidna</code> exposure ≤ 2.0.</p>
+
+      <h3 data-lang="tr">Token yenileme</h3>
+      <h3 data-lang="en">Token rotation</h3>
+<pre><code><span class="c"># Discord veya Telegram tokeni değişince</span>
+<span class="c"># When the Discord or Telegram token changes</span>
+sudo nano /opt/echidna/.env
+sudo systemctl restart echidna</code></pre>
+
+      <h3 data-lang="tr">Güncelleme deploy</h3>
+      <h3 data-lang="en">Deploy an update</h3>
+<pre><code><span class="c"># geliştirme makinesinde yeni tar.gz hazırla, sonra:</span>
+<span class="c"># build a new tar.gz on the dev machine, then:</span>
+sudo systemctl stop echidna
+sudo rm -rf /opt/echidna/dist /opt/echidna/node_modules
+sudo tar xzf /tmp/echidna.tar.gz -C /opt/echidna/
+sudo -u echidna bash -c 'cd /opt/echidna &amp;&amp; npm ci --include=dev &amp;&amp; npm run build'
+sudo systemctl start echidna</code></pre>
+    </section>
+
+    <section id="faq">
+      <h2><span class="num">9.</span><span data-lang="tr">Sık sorulan sorular</span><span data-lang="en">Frequently asked questions</span></h2>
+
+      <h3 data-lang="tr">Discord ID nasıl alınır?</h3>
+      <h3 data-lang="en">How do I get a user's Discord ID?</h3>
+      <p data-lang="tr">Discord → Settings → Advanced → Developer Mode → kullanıcıya sağ tık → Copy User ID.</p>
+      <p data-lang="en">Discord → Settings → Advanced → Developer Mode → right-click the user → Copy User ID.</p>
+
+      <h3 data-lang="tr">Drag-drop ile dosya transferi VM'de çalışmıyor</h3>
+      <h3 data-lang="en">Drag-drop file transfer to the VM doesn't work</h3>
+      <p data-lang="tr">VMware/VirtualBox'ın drag-drop modülü kararsızdır. <code>scp</code> ile aktar (yukarıdaki hızlı kurulum adım 2).</p>
+      <p data-lang="en">VMware/VirtualBox's drag-drop is unreliable. Use <code>scp</code> instead (see Quickstart step 2).</p>
+
+      <h3 data-lang="tr">npm ci sırasında "tsc: not found" hatası</h3>
+      <h3 data-lang="en">"tsc: not found" during npm ci</h3>
+      <p data-lang="tr">Shell'de <code>NODE_ENV=production</code> set edilmişse devDependencies kurulmaz. <code>unset NODE_ENV</code> sonra <code>npm ci --include=dev</code> çalıştır.</p>
+      <p data-lang="en">If your shell has <code>NODE_ENV=production</code> set, devDependencies are skipped. Run <code>unset NODE_ENV</code> then <code>npm ci --include=dev</code>.</p>
+
+      <h3 data-lang="tr">Tüm mesajlar görünmüyor</h3>
+      <h3 data-lang="en">Not all messages are visible</h3>
+      <p data-lang="tr">Discord search API sayfa başına 25 mesaj döner. Default <code>SEARCH_PAGES_PER_GUILD=4</code> = sunucu başına 100 mesaj. Raporda "showing N of M" dipnotu kaçırılan miktarı söyler. Daha yüksek değer (8 veya 20) ban riskini artırır.</p>
+      <p data-lang="en">Discord's search API returns 25 messages per page. Default <code>SEARCH_PAGES_PER_GUILD=4</code> = 100/server. The "showing N of M" footnote in the report tells you what was missed. Higher values (8 or 20) raise ban risk.</p>
+
+      <h3 data-lang="tr">Risk flag false positive — ne yapmalıyım?</h3>
+      <h3 data-lang="en">A false-positive risk flag — what now?</h3>
+      <p data-lang="tr">Risk paneli bir öneri sistemidir. Evidence kısmında orijinal mesaj görünür; bağlamla beraber değerlendir. Örneğin "bit.ly" her zaman scam değildir.</p>
+      <p data-lang="en">The risk panel is advisory. Evidence shows the original message; judge in context. "bit.ly" isn't always a scam.</p>
+
+      <h3 data-lang="tr">Yaş/cinsiyet tahmini güvenilir mi?</h3>
+      <h3 data-lang="en">Are age/gender estimates reliable?</h3>
+      <p data-lang="tr">Hayır, <em>tahmin</em>dir. "high" confidence = açık self-mention veya rol etiketi. "low" = nickname numerics veya zayıf ipucu. Hiçbiri kesinlik değildir; düşük confidence'a göre karar verme.</p>
+      <p data-lang="en">No — they are <em>estimates</em>. "high" = explicit self-mention or role label. "low" = nickname numerics or weak hint. Never facts; don't decide on low-confidence signals.</p>
+
+      <h3 data-lang="tr">Cloud VM kullanabilir miyim?</h3>
+      <h3 data-lang="en">Can I use a cloud VM?</h3>
+      <p data-lang="tr">Önerilmez. Datacenter IP'leri Discord tarafından bilinir; hesap saatler içinde banlanır. Lokal VM veya Raspberry Pi tercih et. Mecbursan WireGuard ile ev IP'sine tünel.</p>
+      <p data-lang="en">Not recommended. Datacenter IPs are well known to Discord; the account is typically banned within hours. Prefer a local VM or a Raspberry Pi. If you must, tunnel egress via WireGuard to a home IP.</p>
+    </section>
+
+    <footer>
+      <span data-lang="tr">echidna · sıfır kalıcılık · Telegram'dan komuta · tek dosyalı kılavuz</span>
+      <span data-lang="en">echidna · zero persistence · operated via Telegram · single-file guide</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){var V=['tr','en'];function pick(){try{var s=localStorage.getItem('echidna-lang');if(V.indexOf(s)!==-1)return s}catch(e){}var n=(navigator.language||'en').toLowerCase();return n.indexOf('tr')===0?'tr':'en'}function apply(l){if(V.indexOf(l)===-1)l='en';document.documentElement.lang=l;var links=document.querySelectorAll('.lang-switch a');for(var i=0;i<links.length;i++)links[i].classList.toggle('active',links[i].getAttribute('data-target')===l);try{localStorage.setItem('echidna-lang',l)}catch(e){}}function init(){apply(pick());var ls=document.querySelectorAll('.lang-switch a');for(var i=0;i<ls.length;i++){ls[i].addEventListener('click',function(e){e.preventDefault();apply(this.getAttribute('data-target'))})}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init)}else{init()}})();
+</script>
+
+</body>
+</html>

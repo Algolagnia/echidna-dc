@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment & secrets — NEVER commit
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test artifacts
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Deployment archives — generated, never committed
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Local development overrides
+local/
+tmp/
+temp/
+*.bak
+*.orig
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Optional: lock files for alternative package managers
+# (we use npm; uncomment to ignore pnpm/yarn locks if a contributor uses them)
+# pnpm-lock.yaml
+# yarn.lock
